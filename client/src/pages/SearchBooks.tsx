@@ -1,3 +1,15 @@
+import Auth from '../utils/auth';
+
+const SearchBooks = () => {
+  return (
+    <div>
+      <h1>SearchBooks</h1>
+      {Auth.loggedIn() ? <p>Congrats You are Login!!</p> : <p>Sorry You are NOT Login!!</p>}
+      </div>
+  );
+};
+
+/*
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import {
@@ -9,9 +21,9 @@ import {
   Row
 } from 'react-bootstrap';
 
-import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
-import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
+import Auth from '../old-utils/auth';
+import { saveBook, searchGoogleBooks } from '../old-utils/API';
+import { saveBookIds, getSavedBookIds } from '../old-utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
 
@@ -153,5 +165,5 @@ const SearchBooks = () => {
     </>
   );
 };
-
+*/
 export default SearchBooks;
