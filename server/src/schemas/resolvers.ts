@@ -15,22 +15,12 @@ interface LoginUserArgs {
   password: string;
 }
 
-interface UserArgs {
-  username: string;
-}
-
 const resolvers = {
   Query: {
-    users: async () => {
-      return User.find().populate('thoughts');
-    },
-    user: async (_parent: any, { username }: UserArgs) => {
-      return User.findOne({ username }).populate('thoughts');
-    },
     // Query to get the authenticated user's information
     // The 'me' query relies on the context to check if the user is authenticated
     me: async (_parent: any, _args: any, context: any) => {
-      // If the user is authenticated, find and return the user's information along with their thoughts - NOTE: NO THOUGHTS
+      // If the user is authenticated, find and return the user's information 
       if (context.user) {
         return User.findOne({ _id: context.user._id });
       }
@@ -73,6 +63,37 @@ const resolvers = {
       // Return the token and the user
       return { token, user };
     },
+    addBook: async (_parent: any, { input }: any, context: any) => {
+      // If the user is authenticated, find and update the user's information
+      if (context.user) {
+      return User.findOneAndUpdate(
+        { _id: context.user._id },
+        {
+          $addToSet: { savedBooks: input },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      }
+      // If the user is not authenticated, throw an AuthenticationError
+      throw new AuthenticationError('You need to be logged in!');
+    },
+    removeBook: async (_parent: any, { bookId }: any, context: any) => {
+      // If the user is authenticated, find and update the user's information
+      if (context.user) {
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
+          {
+            $pull: { savedBooks: { bookId } },
+          },
+          { new: true }
+        );
+      }
+      // If the user is not authenticated, throw an AuthenticationError
+      throw new AuthenticationError('You need to be logged in!');
+    }
   },
 };
 

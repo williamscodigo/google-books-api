@@ -5,21 +5,14 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
-//import type { User } from '../models/User';
+import type { User } from '../models/User';
 
-//debugger; - missing books on server side aswell (typeDefs and resolvers)
-interface UserSignup {
-  username: string | null;
-  email: string | null;
-  password: string | null;
-}
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
 const SignupForm = ({}: { handleModalClose: () => void }) => {
 
   // set initial form state
-  //debugger; // not using User type for now - missing books
-  const [userFormData, setUserFormData] = useState<UserSignup>({ username: '', email: '', password: ''});
+  const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
 
   //note: not using error or data from mutation for now
   // const [addUser, { error, data }] = useMutation(ADD_USER);
@@ -54,11 +47,11 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
       console.error(e);
     }
 
-    //debugger; - missing books
     setUserFormData({
       username: '',
       email: '',
-      password: ''
+      password: '',
+      savedBooks: [],
     });
   };
 

@@ -3,21 +3,17 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 
+import type { User } from '../models/User';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
-//debugger; - missing books
-interface UserLogin {
-  email: string | null;
-  password: string | null;
-}
 
 
 // biome-ignore lint/correctness/noEmptyPattern: <explanation>
 const LoginForm = ({}: { handleModalClose: () => void }) => {
 
-  const [userFormData, setUserFormData] = useState<UserLogin>({ email: '', password: ''});
+  const [userFormData, setUserFormData] = useState<User>({ username: '', email: '', password: '', savedBooks: [] });
   const [login] = useMutation(LOGIN_USER);
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -49,8 +45,10 @@ const LoginForm = ({}: { handleModalClose: () => void }) => {
     }
 
     setUserFormData({
+      username: '',
       email: '',
       password: '',
+      savedBooks: [],
     });
   };
 

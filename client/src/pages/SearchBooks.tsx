@@ -1,15 +1,3 @@
-import Auth from '../utils/auth';
-
-const SearchBooks = () => {
-  return (
-    <div>
-      <h1>SearchBooks</h1>
-      {Auth.loggedIn() ? <p>Congrats You are Login!!</p> : <p>Sorry You are NOT Login!!</p>}
-      </div>
-  );
-};
-
-/*
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import {
@@ -21,11 +9,14 @@ import {
   Row
 } from 'react-bootstrap';
 
-import Auth from '../old-utils/auth';
-import { saveBook, searchGoogleBooks } from '../old-utils/API';
-import { saveBookIds, getSavedBookIds } from '../old-utils/localStorage';
+import Auth from '../utils/auth';
+import { searchGoogleBooks } from '../utils/API';
+import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 import type { Book } from '../models/Book';
 import type { GoogleAPIBook } from '../models/GoogleAPIBook';
+
+import { useMutation } from '@apollo/client';
+import { ADD_BOOK } from '../utils/mutations';
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -35,6 +26,10 @@ const SearchBooks = () => {
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
+
+
+  // create addBook mutation
+  const [addBook] = useMutation(ADD_BOOK);
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -53,6 +48,7 @@ const SearchBooks = () => {
     try {
       const response = await searchGoogleBooks(searchInput);
 
+
       if (!response.ok) {
         throw new Error('something went wrong!');
       }
@@ -62,9 +58,10 @@ const SearchBooks = () => {
       const bookData = items.map((book: GoogleAPIBook) => ({
         bookId: book.id,
         authors: book.volumeInfo.authors || ['No author to display'],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
+        title: book.volumeInfo.title || 'No title to display',
+        description: book.volumeInfo.description || 'No description available',
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        // link: book.volumeInfo.infoLink || ''
       }));
 
       setSearchedBooks(bookData);
@@ -79,19 +76,9 @@ const SearchBooks = () => {
     // find the book in `searchedBooks` state by the matching id
     const bookToSave: Book = searchedBooks.find((book) => book.bookId === bookId)!;
 
-    // get token
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    if (!token) {
-      return false;
-    }
 
     try {
-      const response = await saveBook(bookToSave, token);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      await addBook({ variables: { input: bookToSave } });
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
@@ -165,5 +152,5 @@ const SearchBooks = () => {
     </>
   );
 };
-*/
+
 export default SearchBooks;
