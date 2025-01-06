@@ -81,11 +81,9 @@ You can run this project in your local evironment, follow these steps:
 
 ## Deployment
 
-The application is deployed on Render and can be accessed at:
-Live Application URL
+The application is deployed on Render and can be accessed at: [https://google-books-api-wdfi.onrender.com/](https://google-books-api-wdfi.onrender.com/) 
 
-The repository is hosted on GitHub at:
-GitHub Repository URL
+The repository is hosted on GitHub at: [https://github.com/williamscodigo/google-books-api](https://github.com/williamscodigo/google-books-api) 
 
 
 ## License
